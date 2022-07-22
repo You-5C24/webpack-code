@@ -12,6 +12,13 @@ module.exports = {
   module: {
     rules: [
       // loader 的配置
+      {
+        test: /\.css$/,
+        use: [
+          "style-loader", // 动态创建 style 标签，把 js 中 css 添加到 html 文件中，使其生效
+          "css-loader" // 把 css 资源编译成 cjs 模块 放到 js 中
+        ],
+      },
     ],
   },
   // plugins
