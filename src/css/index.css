@@ -3,3 +3,17 @@
   height: 100px;
   background-color: palevioletred;
 }
+
+.box5 {
+  width: 100px;
+  height: 100px;
+  background-image: url("../assets/image01.jpg");
+  background-size: cover;
+}
+
+.box6 {
+  width: 100px;
+  height: 100px;
+  background-image: url("../assets/image02.png");
+  background-size: cover;
+}
