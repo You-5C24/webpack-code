@@ -6,8 +6,10 @@ module.exports = {
   // output
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "js/main.js",
+    filename: "static/js/main.js",
     // assetModuleFilename: "images/[hash][ext][query]",
+    // 自动清空上次打包结果
+    clean: true,
   },
   // module
   module: {
@@ -49,6 +51,13 @@ module.exports = {
         },
         generator: {
           filename: "static/images/[hash:10][ext][query]",
+        },
+      },
+      {
+        test: /\.(ttf|woff2?|map4|map3|avi)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "static/media/[hash:10][ext][query]",
         },
       },
     ],
