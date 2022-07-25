@@ -61,6 +61,11 @@ module.exports = {
           filename: "static/media/[hash:10][ext][query]",
         },
       },
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+      },
     ],
   },
   // plugins
