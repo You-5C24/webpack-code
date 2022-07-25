@@ -82,6 +82,12 @@ module.exports = {
       template: path.resolve(__dirname, "public/index.html"),
     }),
   ],
+  // 开发服务器
+  devServer: {
+    host: "localhost",
+    port: "8090",
+    open: true,
+  },
   // mode
   mode: "development",
 };
