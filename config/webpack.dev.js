@@ -7,11 +7,8 @@ module.exports = {
   entry: "./src/main.js",
   // output
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: undefined,
     filename: "static/js/main.js",
-    // assetModuleFilename: "images/[hash][ext][query]",
-    // 自动清空上次打包结果
-    clean: true,
   },
   // module
   module: {
@@ -74,12 +71,12 @@ module.exports = {
     // plugin 的配置
     new ESLintWebpackPlugin({
       // 检测哪些文件
-      context: path.resolve(__dirname, "src"),
+      context: path.resolve(__dirname, "../src"),
     }),
     new HtmlWebpackPlugin({
       // 以 public/index.html 为模板创建文件
       // 新的html文件有两个特点：1. 内容和源文件一致 2. 自动引入打包生成的js等资源
-      template: path.resolve(__dirname, "public/index.html"),
+      template: path.resolve(__dirname, "../public/index.html"),
     }),
   ],
   // 开发服务器

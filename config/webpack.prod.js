@@ -1,0 +1,97 @@
+const path = require("path");
+const ESLintWebpackPlugin = require("eslint-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+module.exports = {
+  // entry
+  entry: "./src/main.js",
+  // output
+  output: {
+    path: path.resolve(__dirname, "../dist"),
+    filename: "static/js/main.js",
+    // assetModuleFilename: "images/[hash][ext][query]",
+    // 自动清空上次打包结果
+    clean: true,
+  },
+  // module
+  module: {
+    rules: [
+      // loader 的配置
+      {
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader", // 把 css 资源编译成 cjs 模块 放到 js 中
+        ],
+      },
+      {
+        test: /\.less$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"],
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          // Translates CSS into CommonJS
+          "css-loader",
+          // Compiles Sass to CSS
+          "sass-loader",
+        ],
+      },
+      {
+        test: /\.styl$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "stylus-loader"],
+      },
+      {
+        test: /\.(png|jpe?g|gif|webp)$/,
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024, // 小于10kb的图片会被base64处理
+          },
+        },
+        generator: {
+          filename: "static/images/[hash:10][ext][query]",
+        },
+      },
+      {
+        test: /\.(ttf|woff2?|map4|map3|avi)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "static/media/[hash:10][ext][query]",
+        },
+      },
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+      },
+    ],
+  },
+  // plugins
+  plugins: [
+    // plugin 的配置
+    new ESLintWebpackPlugin({
+      // 检测哪些文件
+      context: path.resolve(__dirname, "../src"),
+    }),
+    new HtmlWebpackPlugin({
+      // 以 public/index.html 为模板创建文件
+      // 新的html文件有两个特点：1. 内容和源文件一致 2. 自动引入打包生成的js等资源
+      template: path.resolve(__dirname, "../public/index.html"),
+    }),
+    // 提取 css 成单独文件
+    new MiniCssExtractPlugin({
+      filename: "static/css/main.css",
+    }),
+  ],
+  // 开发服务器
+  devServer: {
+    host: "localhost",
+    port: "8090",
+    open: true,
+  },
+  // mode
+  mode: "production",
+};
