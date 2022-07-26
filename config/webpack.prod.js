@@ -3,6 +3,25 @@ const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+// 获取处理样式的Loaders
+const getStyleLoaders = (preProcessor) => {
+  return [
+    MiniCssExtractPlugin.loader,
+    "css-loader",
+    {
+      loader: "postcss-loader",
+      options: {
+        postcssOptions: {
+          plugins: [
+            "postcss-preset-env", // 能解决大多数样式兼容性问题
+          ],
+        },
+      },
+    },
+    preProcessor,
+  ].filter(Boolean);
+};
+
 module.exports = {
   // entry
   entry: "./src/main.js",
@@ -20,28 +39,19 @@ module.exports = {
       // loader 的配置
       {
         test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader", // 把 css 资源编译成 cjs 模块 放到 js 中
-        ],
+        use: getStyleLoaders(),
       },
       {
         test: /\.less$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"],
+        use: getStyleLoaders("less-loader"),
       },
       {
         test: /\.s[ac]ss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          // Translates CSS into CommonJS
-          "css-loader",
-          // Compiles Sass to CSS
-          "sass-loader",
-        ],
+        use: getStyleLoaders("sass-loader"),
       },
       {
         test: /\.styl$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "stylus-loader"],
+        use: getStyleLoaders("stylus-loader"),
       },
       {
         test: /\.(png|jpe?g|gif|webp)$/,
