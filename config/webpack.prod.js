@@ -37,46 +37,50 @@ module.exports = {
   // module
   module: {
     rules: [
-      // loader 的配置
       {
-        test: /\.css$/,
-        use: getStyleLoaders(),
-      },
-      {
-        test: /\.less$/,
-        use: getStyleLoaders("less-loader"),
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: getStyleLoaders("sass-loader"),
-      },
-      {
-        test: /\.styl$/,
-        use: getStyleLoaders("stylus-loader"),
-      },
-      {
-        test: /\.(png|jpe?g|gif|webp)$/,
-        type: "asset",
-        parser: {
-          dataUrlCondition: {
-            maxSize: 10 * 1024, // 小于10kb的图片会被base64处理
+        oneOf: [
+          // loader 的配置
+          {
+            test: /\.css$/,
+            use: getStyleLoaders(),
           },
-        },
-        generator: {
-          filename: "static/images/[hash:10][ext][query]",
-        },
-      },
-      {
-        test: /\.(ttf|woff2?|map4|map3|avi)$/,
-        type: "asset/resource",
-        generator: {
-          filename: "static/media/[hash:10][ext][query]",
-        },
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
-        loader: "babel-loader",
+          {
+            test: /\.less$/,
+            use: getStyleLoaders("less-loader"),
+          },
+          {
+            test: /\.s[ac]ss$/,
+            use: getStyleLoaders("sass-loader"),
+          },
+          {
+            test: /\.styl$/,
+            use: getStyleLoaders("stylus-loader"),
+          },
+          {
+            test: /\.(png|jpe?g|gif|webp)$/,
+            type: "asset",
+            parser: {
+              dataUrlCondition: {
+                maxSize: 10 * 1024, // 小于10kb的图片会被base64处理
+              },
+            },
+            generator: {
+              filename: "static/images/[hash:10][ext][query]",
+            },
+          },
+          {
+            test: /\.(ttf|woff2?|map4|map3|avi)$/,
+            type: "asset/resource",
+            generator: {
+              filename: "static/media/[hash:10][ext][query]",
+            },
+          },
+          {
+            test: /\.m?js$/,
+            exclude: /node_modules/,
+            loader: "babel-loader",
+          },
+        ],
       },
     ],
   },
