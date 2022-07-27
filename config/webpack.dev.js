@@ -84,6 +84,7 @@ module.exports = {
     host: "localhost",
     port: "8090",
     open: true,
+    hot: true, // 开启热更新功能， 默认为true
   },
   // mode
   mode: "development",
