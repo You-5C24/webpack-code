@@ -1,8 +1,12 @@
+const os = require("os");
 const path = require("path");
 const ESLintWebpackPlugin = require("eslint-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+
+const threads = os.cpus().length;
 
 // 获取处理样式的Loaders
 const getStyleLoaders = (preProcessor) => {
@@ -79,7 +83,21 @@ module.exports = {
             test: /\.m?js$/,
             exclude: /node_modules/, // 排除 node_modules 下的文件，其他文件都处理
             // include: path.resolve(__dirname, "../src"), // 只处理 src 下的文件，其他文件不处理
-            loader: "babel-loader",
+            use: [
+              {
+                loader: "thread-loader", // 开启多进程
+                options: {
+                  workers: threads, // 数量
+                },
+              },
+              {
+                loader: "babel-loader",
+                options: {
+                  cacheDirectory: "true", // 开启 babel 编译缓存
+                  cacheCompression: false, // 缓存文件不要压缩
+                },
+              },
+            ],
           },
         ],
       },
@@ -92,6 +110,11 @@ module.exports = {
       // 检测哪些文件
       context: path.resolve(__dirname, "../src"),
       exclude: "/node_modules/", // 默认会设置
+      // 缓存目录
+      cacheLocation: path.resolve(
+        __dirname,
+        "../node_modules/.cache/.eslintcache"
+      ),
     }),
     new HtmlWebpackPlugin({
       // 以 public/index.html 为模板创建文件
@@ -103,8 +126,19 @@ module.exports = {
       filename: "static/css/main.css",
     }),
     // css压缩
-    new CssMinimizerPlugin(),
+    // new CssMinimizerPlugin(),
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      // css压缩也可以写到optimization.minimizer里面，效果一样的
+      new CssMinimizerPlugin(),
+      // 当生产模式会默认开启TerserPlugin，但是需要进行其他配置，就要重新写了
+      new TerserPlugin({
+        parallel: threads, // 开启多进程
+      }),
+    ],
+  },
   // 开发服务器
   devServer: {
     host: "localhost",
